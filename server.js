@@ -9,8 +9,8 @@ app.set("view engine", "pug");
 app.use(express.static("public"));
 
 const redirect_uri = "http://localhost:3000/callback";
-const client_id = "";
-const client_secret = "";
+const client_id = "1348d6139c164eb99b1b52fa0c40f6ee";
+const client_secret = "00352751b7e845febd1a3346d95122c0";
 
 global.access_token;
 
@@ -22,7 +22,7 @@ app.get("/authorize", (req, res) => {
   var auth_query_parameters = new URLSearchParams({
     response_type: "code",
     client_id: client_id,
-    scope: "user-library-read",
+    scope: "user-library-read user-top-read",
     redirect_uri: redirect_uri,
   });
 
@@ -71,7 +71,7 @@ async function getData(endpoint) {
 
 app.get("/dashboard", async (req, res) => {
   const userInfo = await getData("/me");
-  const tracks = await getData("/me/tracks?limit=10");
+  const tracks = await getData("/me/top/tracks?time_range=medium_term&limit=10");
 
   res.render("dashboard", { user: userInfo, tracks: tracks.items });
 });
