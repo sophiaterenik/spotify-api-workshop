@@ -10,7 +10,7 @@ app.use(express.static("public"));
 
 const redirect_uri = "http://localhost:3000/callback";
 const client_id = "1348d6139c164eb99b1b52fa0c40f6ee";
-const client_secret = "00352751b7e845febd1a3346d95122c0";
+const client_secret = "6f68ca04e4384871b3aefea8a72e99b8";
 
 global.access_token;
 
@@ -18,6 +18,7 @@ app.get("/", function (req, res) {
   res.render("index");
 });
 
+//to authorize user's login
 app.get("/authorize", (req, res) => {
   var auth_query_parameters = new URLSearchParams({
     response_type: "code",
@@ -69,13 +70,16 @@ async function getData(endpoint) {
   return data;
 }
 
+//load user data
 app.get("/dashboard", async (req, res) => {
   const userInfo = await getData("/me");
   const tracks = await getData("/me/top/tracks?time_range=medium_term&limit=10");
 
+  //display data
   res.render("dashboard", { user: userInfo, tracks: tracks.items });
 });
 
+//show recommendations
 app.get("/recommendations", async (req, res) => {
   const artist_id = req.query.artist;
   const track_id = req.query.track;
@@ -86,6 +90,7 @@ app.get("/recommendations", async (req, res) => {
     seed_tracks: track_id,
   });
 
+  //display data
   const data = await getData("/recommendations?" + params);
   res.render("recommendation", { tracks: data.tracks });
 });
